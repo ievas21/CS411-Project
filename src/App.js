@@ -1,32 +1,98 @@
-import logo from './logo.svg';
-import React, {useState} from 'react';
+import React, { useState } from 'react';
 import './App.css';
+import { BrowserRouter as Router, Routes, Route, Link, Navigate } from 'react-router-dom';
 
 
+function IntroPage() {
+  const [redirectToGenerator, setRedirectToGenerator] = useState(false);
 
-function App() {
 
-
-  const [thoughts, setThoughts] = useState('');
-  const handleThoughtsChange = (event) => {
-    setThoughts(event.target.value);
+  const handleGetStartedClick = () => {
+    setRedirectToGenerator(true);
   };
 
-  
+
   return (
-    <div className="App">
-      <header className="App-header">
-        <h1>Thoughts from today to generate a Spotify playlist: </h1>
-        <textarea
-          value = {thoughts}
-          onChange = {handleThoughtsChange}
-          placeholder = "Enter your thoughts here..."
-          rows = {4}
-          cols = {50}
-        />
-      </header>
+    <div>
+      <h1>Welcome to the Personalized Playlist App</h1>
+      <p>This app generates a personalized Spotify playlist based on your thoughts from today.</p>
+      <Link to="/input" onClick={handleGetStartedClick}>Get Started</Link>
+      {redirectToGenerator && <Navigate to="/input" />}
     </div>
   );
 }
 
+
+
+
+
+
+function UserInput() {
+  const [redirectToPlaylist, setRedirectToPlaylist] = useState(false);
+  const [thoughts, setThoughts] = useState('');
+
+
+  const handleThoughtsChange = (event) => {
+    setThoughts(event.target.value);
+  };
+
+
+  const handleSubmit = (event) => {
+    event.preventDefault();
+    setRedirectToPlaylist(true);
+  };
+
+
+  return (
+    <div>
+      <h1>Enter Your Thoughts</h1>
+      <form onSubmit={handleSubmit}>
+        <textarea
+          value={thoughts}
+          onChange={handleThoughtsChange}
+          placeholder="Enter thoughts here..."
+          rows={4}
+          cols={0}
+        />
+        <button type="submit">Enter</button>
+      </form>
+      {redirectToPlaylist && <Navigate to="/playlist" />}
+    </div>
+  );
+}
+
+
+
+
+
+
+function PlaylistPage() {
+
+
+  return (
+    <div>
+      <h1>Your Personalized Playlist: </h1>
+     
+    </div>
+  );
+}
+
+
+
+
+function App() {
+  return (
+    <Router>
+      <Routes>
+        <Route path="/" element={<IntroPage />} />
+        <Route path="/input" element={<UserInput />} />
+        <Route path="/playlist" element={<PlaylistPage />} />
+      </Routes>
+    </Router>
+  );
+}
+
+
 export default App;
+
+
